@@ -95,7 +95,7 @@
 
 		<div class="container-fluid" id="life-area" style="padding-top: 50px; height: 100%;"></div>
 
-    <script type="text/javascript">
+		<script type="text/javascript">
 
       requirejs(["bootstrap", "jquery.unveil"], function() {
 
@@ -312,7 +312,7 @@
 				
 					jQuery(window).on('focus', function(e) {
 						
-						jQuery('#life-area').find('video').focus();
+						jQuery('#life-area').('video').focus();
 					});
 					
 					document.addEventListener('visibilitychange', 
@@ -355,21 +355,21 @@
 					
 						// ReUtils.beforeInitEnv(function() {});
 						
-						console.log(document.referrer);
+						var params = ReUtils.getURLParameters();
 						
-						if ((window.name != '') && (typeof JSON.parse(window.name)["video_id"] != 'undefined') && (JSON.parse(window.name)["video_id"] != '')) {
+						if ((typeof params["video_code"] != 'undefined') && (document.referrer != '')) {
 							
-							// console.log(JSON.parse(window.name));
-						
+							console.log(document.referrer);
+							
+							// check referren
+							
 							FormUtils.showMarqueebar(
 										
 								'讀取影片播放資料‧‧‧',
 								function(closeMarqueebar) {
 														
-									var url = 'https://script.google.com/macros/s/AKfycby3NkoES5nm2dd-ZlGem2DfJoN4U3KVyBWgLavi_Nr2PtHycDs/exec?video_id=' + JSON.parse(window.name)["video_id"];
+									var url = 'https://script.google.com/macros/s/AKfycby3NkoES5nm2dd-ZlGem2DfJoN4U3KVyBWgLavi_Nr2PtHycDs/exec?video_id=' + params["video_code"];
 									
-									window.name = '';
-											
 									jQuery.getJSON(url, function(data, textStatus, jqXHR) {
 												
 										closeMarqueebar();
@@ -392,7 +392,6 @@
 					
 								function(closeLoadingEffect) {
 
-									var params = ReUtils.getURLParameters();
 									var url = 'https://script.google.com/macros/s/AKfycbztxaQLHiCGNsn6Oil7nl-o1fOhUHBTWR3DG87KJvJa7m45B2Q/exec';
 					
 									if (typeof params["idol"] != 'undefined') {
@@ -471,13 +470,8 @@
 								
 													if (typeof video_id != 'undefined') {
 												
-														window.name = JSON.stringify({"video_id": video_id});
-													
-														// 如何避免跳離現有瀏覽視窗是一個相當麻煩的問題，否則就要想辦法避免使用連接就可直接播放影片的狀況！
-														
-														// 使用iframe處理？
-														// 另外再找廣告來源？
-														window.location.href = window.location.origin + window.location.pathname;
+														// window.location.href = window.location.origin + window.location.pathname;
+														window.location.href = self.find('a').attr('href');
 													}
 												});
 						
