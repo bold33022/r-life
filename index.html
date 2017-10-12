@@ -1,0 +1,496 @@
+<!--
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+-->
+
+<!DOCTYPE html>
+
+<html lang="zh-Hant-TW" style="height: 100%;">
+
+  <head>
+
+    <base href="/">
+
+    <link rel="icon" href="icons/favicon.ico">
+
+    <meta name="theme-color" content="#ffffff">
+
+    <meta http-equiv="Content-Language" content="zh-tw">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    <meta name="author" content="">
+    <meta name="force-login" content="N">
+
+    <meta name="robots" content="index,follow">
+
+    <meta name="keywords" content="av">
+    <meta name="description" content="av">
+
+    <title>Random Life</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/css/fileinput.min.css" media="all" />
+
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		
+		<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.2.0/video-js.css" />
+
+    <script type="text/javascript" src="https://ace33022.github.io/tw/ace33022/NameSpace.js"></script>
+
+    <script type="text/javascript" src="https://ace33022.github.io/tw/ace33022/DefaultConfigurations.js"></script>
+    <script type="text/javascript" src="https://ace33022.github.io/tw/Configurations.js"></script>
+
+    <script type="text/javascript" src="https://ace33022.github.io/tw/ace33022/RequireJSConfig.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js"></script>
+
+    <script type="text/javascript">
+
+      requirejs.config(tw.ace33022.RequireJSConfig);
+    </script>
+  </head>
+
+  <!--
+    --
+    -- r-life
+    --
+    -- @see <a href="https://developer.mozilla.org/en-US/docs/Web">Web technology For developers | MDN</a>
+    --
+    -- @see <a href="https://jquery.com/">jQuery</a>
+    --
+    -- @see <a href="http://getbootstrap.com/">Bootstrap · The world's most popular mobile-first and responsive front-end framework.</a>
+    --
+    -->
+
+  <body style="height: 100%;">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Random Life</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-navbar-collapse">
+					<form class="navbar-form" role="search">
+						<div class="input-group">
+							<input type="text" class="form-control" id="inpSearch" placeholder="Search Idol" value="" />
+							<span class="input-group-btn">
+								<button type="button" class="btn" id="btnSearch"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+							</span>
+						</div>
+					</form>
+				</div>
+      </div>
+    </nav>
+
+		<div class="container-fluid" id="life-area" style="padding-top: 50px; height: 100%;"></div>
+
+    <script type="text/javascript">
+
+      requirejs(["bootstrap", "jquery.unveil"], function() {
+
+				function playVideo(source) {
+				
+					requirejs(["videojs", "videojs-hotkeys"], function(videojs) {
+					
+						var videoSrcOption;
+						
+						var videoId = 'video' + Math.random().toString(36).substr(2, 6);
+						var tag;
+						
+						var configurations = {
+				
+							"seekStep": 5,
+							"volumeStep": 0.1,
+							"playbackRates": [1],
+							"defaultVolume": 0.5,
+							"saveRows": 10
+						};
+						
+						var videoOptions = {
+				
+							"controlBar": {
+								"remainingTimeDisplay": false
+							}
+						};
+					
+						var configOptions = {
+					
+							"seekStep": 5,
+							"volumeStep": 0.1
+						};
+						
+						if (typeof source == 'string') {
+					
+							videoSrcOption = {"type": "video/mp4", "src": source};
+						
+							// setOpenedFilesDropdownMenu({"file_name": source});
+						}
+						else if (typeof source.name == 'string') {
+							
+							if (source.type == 'video/mp4') {
+						
+								videoSrcOption = {"type": "video/mp4", "src": URL.createObjectURL(source)};
+							
+								// setOpenedFilesDropdownMenu({"file_name": source.name});
+							}
+						}
+					
+						if (typeof videoSrcOption != 'undefined') {
+					
+							if (configurations != null) {
+						
+								configOptions["seekStep"] = configurations["seekStep"];
+								configOptions["volumeStep"] = configurations["volumeStep"];
+							
+								if (typeof configurations["playbackRates"] != 'undefined') {
+							
+									if (configurations["playbackRates"].length != 1) videoOptions["playbackRates"] = configurations["playbackRates"];
+								}
+							}
+
+							videojs.registerComponent('StopButton', 
+						
+								videojs.extend(videojs.getComponent('Button'), {
+				
+									"constructor": function() {
+					
+										videojs.getComponent('Button').apply(this, arguments);
+						
+										// Font Awesome
+										this.addClass('fa');
+										this.addClass('fa-square');
+								
+										this.controlText('Stop');
+									},
+									"handleClick": function() {
+					
+										this.player().dispose();
+									
+										initWorkArea();
+									}
+								})
+							);
+						
+							videojs.registerComponent('BackwardButton', 
+						
+								videojs.extend(videojs.getComponent('Button'), {
+				
+									"constructor": function() {
+					
+										videojs.getComponent('Button').apply(this, arguments);
+						
+										// Font Awesome
+										this.addClass('fa');
+										this.addClass('fa-angle-double-left');
+								
+										this.controlText('-' + configOptions["seekStep"] + 'sec');
+									},
+									"handleClick": function() {
+					
+										var curTime = this.player().currentTime() - configOptions["seekStep"];
+								
+										if (this.player().currentTime() <= configOptions["seekStep"]) curTime = 0;
+								
+										this.player().currentTime(curTime);
+									}
+								})
+							);
+					
+							videojs.registerComponent('ForwardButton', 
+						
+								videojs.extend(videojs.getComponent('Button'), {
+				
+									"constructor": function() {
+					
+										videojs.getComponent('Button').apply(this, arguments);
+						
+										// Font Awesome
+										this.addClass('fa');
+										this.addClass('fa-angle-double-right');
+								
+										this.controlText('+' + configOptions["seekStep"] + 'sec');
+									},
+									"handleClick": function() {
+					
+										var wasPlaying = !this.player().paused();
+									
+										if (wasPlaying) this.player().pause();
+								
+										// this.player().currentTime(this.player().duration());
+										this.player().currentTime(this.player().currentTime() + configOptions["seekStep"]);
+									
+										if (wasPlaying) this.player().play();
+									}
+								})
+							);
+					
+							tag = '<div class="row" style="height: 100%;">'
+									+	'  <div id="work-area" class="col" style="height: 100%;">'
+									+ '    <video id="' + videoId + '" preload="none" />'
+									+ '  </div>'
+									+ '</div>';
+							jQuery('#life-area').empty().append(tag);
+						
+							jQuery('#' + videoId).attr('controls', 'controls');
+
+							jQuery('#' + videoId).addClass('video-js vjs-default-skin vjs-big-play-centered');
+							jQuery('#' + videoId).addClass('vjs-16-9');
+						
+							videojs(videoId, videoOptions, function() {
+						
+								var self = this;
+						
+								this.getChild('controlBar').addChild('StopButton', {}, 1);
+								this.getChild('controlBar').addChild('BackwardButton', {}, 6);
+								this.getChild('controlBar').addChild('ForwardButton', {}, 8);
+							
+								jQuery('.video-js .vjs-current-time').css({
+							
+									"flex": "none",
+									"font-size": "1em",
+									"line-height": "3em",
+									"min-width": "1em",
+									"width": "auto",
+									"padding-left": "2px",
+									"padding-right": "2px" 
+								});
+							
+								jQuery('.video-js .vjs-current-time').css("display", "block");
+								jQuery('.video-js .vjs-time-divider').css("display", "block");
+								jQuery('.video-js .vjs-time-divider').css("line-height", "3em");
+								jQuery('.video-js .vjs-duration').css("display", "block");
+							
+								this.volume(configurations["defaultVolume"]);
+						
+								this.hotkeys(configOptions);
+						
+								this.on('ended', function(e) {
+					
+									self.dispose();
+							
+									window.location.href = window.location.origin + window.location.pathname;
+								});
+							
+								this.on('click', function(e) {
+
+									// focus back on player, keepy hotkey can be used.
+									self.focus();
+								});
+							
+								this.on('useractive', function(e) {self.focus();});
+							
+								this.on('userinactive', function(e) {self.focus();});
+							
+								// PlaybackRateMenuItem
+								this.getChild('controlBar').getChild('PlaybackRateMenuButton').children()[1].children().forEach(function(element, index) {
+							
+									element.on('click', function(e) {self.focus();});
+								});
+							
+								this.src(videoSrcOption);
+							
+								this.play();
+							
+								this.focus();
+							});
+						}
+					});
+				};
+				
+        jQuery(document).ready(function() {
+				
+					jQuery(window).on('focus', function(e) {
+						
+						jQuery('#life-area').find('video').focus();
+					});
+					
+					document.addEventListener('visibilitychange', 
+						
+						function() {
+						
+							// if (!document.hidden) initInsertStatus(false);
+							// console.log(document.visibilityState);
+							jQuery('#life-area').find('video').focus();
+						},
+						false
+					);
+				
+					jQuery('.navbar-form > div > input').on('keydown', function(e) {
+						
+						if (e.keyCode == 13) {
+							
+							e.preventDefault();
+								
+							return false;
+						}
+					});
+						
+					jQuery('.navbar-brand').on('click', function(e) {
+
+						e.preventDefault();
+
+						window.location.href = window.location.origin + window.location.pathname;
+					});
+
+					jQuery('#btnSearch').on('click', function(e) {
+
+						if (jQuery('#inpSearch').val() != '') {
+
+							window.location.href = window.location.origin + window.location.pathname + '?' + 'idol=' + jQuery('#inpSearch').val();
+						}
+					});
+
+					requirejs(["tw.ace33022.util.browser.ReUtils", "tw.ace33022.util.browser.FormUtils"], function(ReUtils, FormUtils) {
+					
+						// ReUtils.beforeInitEnv(function() {});
+						
+						if ((window.name != '') && (typeof JSON.parse(window.name)["video_id"] != 'undefined') && (JSON.parse(window.name)["video_id"] != '')) {
+							
+							// console.log(JSON.parse(window.name));
+						
+							FormUtils.showMarqueebar(
+										
+								'讀取影片播放資料‧‧‧',
+								function(closeMarqueebar) {
+														
+									var url = 'https://script.google.com/macros/s/AKfycby3NkoES5nm2dd-ZlGem2DfJoN4U3KVyBWgLavi_Nr2PtHycDs/exec?video_id=' + JSON.parse(window.name)["video_id"];
+									
+									window.name = '';
+											
+									jQuery.getJSON(url, function(data, textStatus, jqXHR) {
+												
+										closeMarqueebar();
+
+										if (data["error_code"] == 0) {
+													
+											playVideo(data["uri"]);
+										}
+										else {
+													
+											FormUtils.showMessage('無法取得影片播放資料！');
+										}
+									});
+								}	
+							);
+						}
+						else {
+					
+							FormUtils.showLoadingEffect(
+					
+								function(closeLoadingEffect) {
+
+									var params = ReUtils.getURLParameters();
+									var url = 'https://script.google.com/macros/s/AKfycbztxaQLHiCGNsn6Oil7nl-o1fOhUHBTWR3DG87KJvJa7m45B2Q/exec';
+					
+									if (typeof params["idol"] != 'undefined') {
+
+										document.title = document.title + ' - ' + params["idol"];
+						
+										url += '?' + 'idol' + '=' + params["idol"];
+									
+										jQuery('#inpSearch').val(params["idol"]);
+									}
+							
+									jQuery.getJSON(url, function(data, textStatus, jqXHR) {
+
+										for (var key in data) {
+
+											jQuery('<div class="row" id="' + key + '" style="height: 100%;"></div>').appendTo('#life-area');
+
+											data[key].forEach(function(currentValue, index) {
+
+												var tag = '<div class="subject-item col-sm-3" data-video_id="' + currentValue["video_id"] + '">'
+																+	'  <a href="' + currentValue["href"] + '" title="' + currentValue["title"] + '">'
+																+ '    <img class="img-thumbnail" src="https://fakeimg.pl/350x200/?text=Wait" data-src="' + currentValue["img"] + '" alt="' + currentValue["title"] + '"/>'
+																+ '    <div>' + currentValue["title"] + '</div>'
+																+ '  </a>'
+																+ '</div>';
+													
+												jQuery(tag).appendTo('#' + key);
+											});
+									
+											jQuery('img').unveil();
+										}
+						
+										jQuery('.subject-item')
+										.on('click', function(e) {
+					
+											var modalId = 'modalSuject' + Math.random().toString(36).substr(2, 6);
+											var self = jQuery(this);
+											var video_id;
+						
+											var tag = '<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog" aria-hidden="true">'
+															+ '  <div class="modal-dialog" style="width: 90%;">'
+															+ '    <div class="modal-content">'
+															+ '      <div class="modal-header">'
+															+ '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'
+															+ '        <h4 class="modal-title">' + jQuery(this).find('img').attr('alt') + '</h4>'
+															+ '      </div>'
+															+ '      <div class="modal-body" style="text-align: center;">'
+															+ '        <img class="img-thumbnail" src="' + jQuery(this).find('img').attr('data-src') + '">'
+															+ '      </div>'
+															+ '      <div class="modal-footer">'
+															+ '        <button type="button" class="btn btn-primary">View</button>'
+															+ '        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
+															+ '      </div>'
+															+ '    </div>'
+															+ '  </div>'
+															+ '</div>';
+										
+											if (jQuery('.navbar-toggle').is(':visible') == false) {
+						
+												e.preventDefault();
+							
+												jQuery(tag).appendTo('body');
+							
+												jQuery('#' + modalId + ' .modal-footer .btn-primary').on('click', function(e) {
+						
+													video_id= self.attr('data-video_id');
+								
+													jQuery('#' + modalId).modal('hide');
+												});
+							
+												jQuery('#' + modalId).on('hidden.bs.modal', function(e) {
+							
+													jQuery('#' + modalId + ' .modal-footer .btn-primary').off('click');
+								
+													jQuery('#' + modalId).remove();
+								
+													if (typeof video_id != 'undefined') {
+												
+														window.name = JSON.stringify({"video_id": video_id});
+													
+														// 如何避免跳離現有瀏覽視窗是一個相當麻煩的問題，否則就要想辦法避免使用連接就可直接播放影片的狀況！
+														
+														// 使用iframe處理？
+														// 另外再找廣告來源？
+														window.location.href = window.location.origin + window.location.pathname;
+													}
+												});
+						
+												jQuery('#' + modalId).modal('show');
+											}
+										});
+						
+										closeLoadingEffect();
+									});
+								}
+							);
+						}
+					});	// end require
+				});	// end document ready
+      });
+    </script>
+  </body>
+</html>
