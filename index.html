@@ -368,7 +368,7 @@
 								'讀取影片播放資料‧‧‧',
 								function(closeMarqueebar) {
 														
-									var url = 'https://script.google.com/macros/s/AKfycby3NkoES5nm2dd-ZlGem2DfJoN4U3KVyBWgLavi_Nr2PtHycDs/exec?video_id=' + params["video_code"];
+									var url = 'https://script.google.com/macros/s/AKfycbyvLw2uJUZm5ygy8SpuYxRwaAtUTePulwOzmjjpYnpYveDejI2_/exec?video_code=' + params["video_code"] + '&confirm=' + document.referrer; 
 									
 									jQuery.getJSON(url, function(data, textStatus, jqXHR) {
 												
@@ -470,7 +470,6 @@
 								
 													if (typeof video_id != 'undefined') {
 												
-														// window.location.href = window.location.origin + window.location.pathname;
 														window.location.href = self.find('a').attr('href');
 													}
 												});
