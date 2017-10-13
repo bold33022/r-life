@@ -91,7 +91,7 @@
       </div>
     </nav>
 
-		<div class="container-fluid" id="life-area" style="padding-top: 50px; height: 100%;"></div>
+		<div class="container-fluid" id="life-area" style="padding-top: 50px; height: 100%;" />
 
 		<script type="text/javascript">
 
@@ -245,20 +245,24 @@
 
 										requirejs(["jquery.unveil"], function() {
 											
+											var raw;
+											
 											for (var key in data) {
-
-												jQuery('<div class="row" id="' + key + '" style="height: 100%;"></div>').appendTo('#life-area');
 
 												data[key].forEach(function(currentValue, index) {
 
 													var tag = '<div class="subject-item col-sm-3" data-video_id="' + currentValue["video_id"] + '">'
 																	+	'  <a href="' + currentValue["href"] + '" title="' + currentValue["title"] + '">'
-																	+ '    <img class="img-thumbnail" src="https://fakeimg.pl/350x200/?text=Wait" data-src="' + currentValue["img"] + '" alt="' + currentValue["title"] + '"/>'
+																	+ '    <img class="img-thumbnail" src="https://fakeimg.pl/350x200/?text=Wait" data-src="' + currentValue["img"] + '" alt="' + currentValue["title"] + '" />'
 																	+ '    <div>' + currentValue["title"] + '</div>'
 																	+ '  </a>'
 																	+ '</div>';
 													
-													jQuery(tag).appendTo('#' + key);
+													if ((index % 4) == 0) raw = jQuery('<div class="row" />');
+													
+													jQuery(tag).appendTo(raw);
+													
+													if ((index == (data[key].length - 1)) || ((index % 4) == 3)) jQuery(raw).appendTo('#life-area');
 												});
 											}										
 																					
