@@ -20,7 +20,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 
-    <meta name="author" content="">
+    <meta name="author" content="bold33022">
     <meta name="force-login" content="N">
 
     <meta name="robots" content="index,follow">
@@ -32,8 +32,6 @@
 
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css">
-    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/css/fileinput.min.css" media="all" />
 
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 		
@@ -97,215 +95,55 @@
 
 		<script type="text/javascript">
 
-      requirejs(["bootstrap", "jquery.unveil"], function() {
+      requirejs(["bootstrap"], function() {
 
 				function playVideo(source) {
 				
-					requirejs(["videojs", "videojs-hotkeys"], function(videojs) {
+					var videoSrcOption;
+						
+					if (typeof source == 'string') {
 					
-						var videoSrcOption;
+						videoSrcOption = {"type": "video/mp4", "src": source};
+					}
+					else if (typeof source.name == 'string') {
+							
+						if (source.type == 'video/mp4') {
 						
-						var videoId = 'video' + Math.random().toString(36).substr(2, 6);
-						var tag;
-						
-						var configurations = {
-				
-							"seekStep": 5,
-							"volumeStep": 0.1,
-							"playbackRates": [1],
-							"defaultVolume": 0.5,
-							"saveRows": 10
-						};
-						
-						var videoOptions = {
-				
-							"controlBar": {
-								"remainingTimeDisplay": false
-							}
-						};
-					
-						var configOptions = {
-					
-							"seekStep": 5,
-							"volumeStep": 0.1
-						};
-						
-						if (typeof source == 'string') {
-					
-							videoSrcOption = {"type": "video/mp4", "src": source};
-						
-							// setOpenedFilesDropdownMenu({"file_name": source});
+							videoSrcOption = {"type": "video/mp4", "src": URL.createObjectURL(source)};
 						}
-						else if (typeof source.name == 'string') {
-							
-							if (source.type == 'video/mp4') {
-						
-								videoSrcOption = {"type": "video/mp4", "src": URL.createObjectURL(source)};
-							
-								// setOpenedFilesDropdownMenu({"file_name": source.name});
-							}
-						}
+					}
 					
-						if (typeof videoSrcOption != 'undefined') {
-					
-							if (configurations != null) {
-						
-								configOptions["seekStep"] = configurations["seekStep"];
-								configOptions["volumeStep"] = configurations["volumeStep"];
+					if (typeof videoSrcOption != 'undefined') {
 							
-								if (typeof configurations["playbackRates"] != 'undefined') {
+						requirejs(["tw.ace33022.util.browser.VideoUtils"], function(VideoUtils) {
+								
+							var videoId = 'video' + Math.random().toString(36).substr(2, 6);
+							var videojs;
+								
+							var options = {
 							
-									if (configurations["playbackRates"].length != 1) videoOptions["playbackRates"] = configurations["playbackRates"];
+								"hotkeys": {
+								
+									"seekStep": 5,
+									"volumeStep": 0.1
 								}
-							}
-
-							videojs.registerComponent('StopButton', 
-						
-								videojs.extend(videojs.getComponent('Button'), {
-				
-									"constructor": function() {
-					
-										videojs.getComponent('Button').apply(this, arguments);
-						
-										// Font Awesome
-										this.addClass('fa');
-										this.addClass('fa-square');
+							};
 								
-										this.controlText('Stop');
-									},
-									"handleClick": function() {
-					
-										this.player().dispose();
-									
-										initWorkArea();
-									}
-								})
-							);
-						
-							videojs.registerComponent('BackwardButton', 
-						
-								videojs.extend(videojs.getComponent('Button'), {
-				
-									"constructor": function() {
-					
-										videojs.getComponent('Button').apply(this, arguments);
-						
-										// Font Awesome
-										this.addClass('fa');
-										this.addClass('fa-angle-double-left');
-								
-										this.controlText('-' + configOptions["seekStep"] + 'sec');
-									},
-									"handleClick": function() {
-					
-										var curTime = this.player().currentTime() - configOptions["seekStep"];
-								
-										if (this.player().currentTime() <= configOptions["seekStep"]) curTime = 0;
-								
-										this.player().currentTime(curTime);
-									}
-								})
-							);
-					
-							videojs.registerComponent('ForwardButton', 
-						
-								videojs.extend(videojs.getComponent('Button'), {
-				
-									"constructor": function() {
-					
-										videojs.getComponent('Button').apply(this, arguments);
-						
-										// Font Awesome
-										this.addClass('fa');
-										this.addClass('fa-angle-double-right');
-								
-										this.controlText('+' + configOptions["seekStep"] + 'sec');
-									},
-									"handleClick": function() {
-					
-										var wasPlaying = !this.player().paused();
-									
-										if (wasPlaying) this.player().pause();
-								
-										// this.player().currentTime(this.player().duration());
-										this.player().currentTime(this.player().currentTime() + configOptions["seekStep"]);
-									
-										if (wasPlaying) this.player().play();
-									}
-								})
-							);
-					
-							tag = '<div class="row" style="height: 100%;">'
-									+	'  <div id="work-area" class="col" style="height: 100%;">'
-									+ '    <video id="' + videoId + '" preload="none" />'
-									+ '  </div>'
-									+ '</div>';
+							var tag = '<div class="row" style="height: 100%;">'
+											+	'  <div id="work-area" class="col" style="height: 100%;">'
+											+ '    <video id="' + videoId + '" preload="none" />'
+											+ '  </div>'
+											+ '</div>';
 							jQuery('#life-area').empty().append(tag);
-						
-							jQuery('#' + videoId).attr('controls', 'controls');
-
-							jQuery('#' + videoId).addClass('video-js vjs-default-skin vjs-big-play-centered');
-							jQuery('#' + videoId).addClass('vjs-16-9');
-						
-							videojs(videoId, videoOptions, function() {
-						
-								var self = this;
-						
-								this.getChild('controlBar').addChild('StopButton', {}, 1);
-								this.getChild('controlBar').addChild('BackwardButton', {}, 6);
-								this.getChild('controlBar').addChild('ForwardButton', {}, 8);
 							
-								jQuery('.video-js .vjs-current-time').css({
+							videojs = VideoUtils.getVideojs(videoId, options);
 							
-									"flex": "none",
-									"font-size": "1em",
-									"line-height": "3em",
-									"min-width": "1em",
-									"width": "auto",
-									"padding-left": "2px",
-									"padding-right": "2px" 
-								});
+							videojs.volume(0.5);
+							videojs.src(videoSrcOption);
 							
-								jQuery('.video-js .vjs-current-time').css("display", "block");
-								jQuery('.video-js .vjs-time-divider').css("display", "block");
-								jQuery('.video-js .vjs-time-divider').css("line-height", "3em");
-								jQuery('.video-js .vjs-duration').css("display", "block");
-							
-								this.volume(configurations["defaultVolume"]);
-						
-								this.hotkeys(configOptions);
-						
-								this.on('ended', function(e) {
-					
-									self.dispose();
-							
-									window.location.href = window.location.origin + window.location.pathname;
-								});
-							
-								this.on('click', function(e) {
-
-									// focus back on player, keepy hotkey can be used.
-									self.focus();
-								});
-							
-								this.on('useractive', function(e) {self.focus();});
-							
-								this.on('userinactive', function(e) {self.focus();});
-							
-								// PlaybackRateMenuItem
-								this.getChild('controlBar').getChild('PlaybackRateMenuButton').children()[1].children().forEach(function(element, index) {
-							
-									element.on('click', function(e) {self.focus();});
-								});
-							
-								this.src(videoSrcOption);
-							
-								this.play();
-							
-								this.focus();
-							});
-						}
-					});
+							videojs.play();
+						});
+					}
 				};
 				
         jQuery(document).ready(function() {
@@ -405,23 +243,26 @@
 							
 									jQuery.getJSON(url, function(data, textStatus, jqXHR) {
 
-										for (var key in data) {
+										requirejs(["jquery.unveil"], function() {
+											
+											for (var key in data) {
 
-											jQuery('<div class="row" id="' + key + '" style="height: 100%;"></div>').appendTo('#life-area');
+												jQuery('<div class="row" id="' + key + '" style="height: 100%;"></div>').appendTo('#life-area');
 
-											data[key].forEach(function(currentValue, index) {
+												data[key].forEach(function(currentValue, index) {
 
-												var tag = '<div class="subject-item col-sm-3" data-video_id="' + currentValue["video_id"] + '">'
-																+	'  <a href="' + currentValue["href"] + '" title="' + currentValue["title"] + '">'
-																+ '    <img class="img-thumbnail" src="https://fakeimg.pl/350x200/?text=Wait" data-src="' + currentValue["img"] + '" alt="' + currentValue["title"] + '"/>'
-																+ '    <div>' + currentValue["title"] + '</div>'
-																+ '  </a>'
-																+ '</div>';
+													var tag = '<div class="subject-item col-sm-3" data-video_id="' + currentValue["video_id"] + '">'
+																	+	'  <a href="' + currentValue["href"] + '" title="' + currentValue["title"] + '">'
+																	+ '    <img class="img-thumbnail" src="https://fakeimg.pl/350x200/?text=Wait" data-src="' + currentValue["img"] + '" alt="' + currentValue["title"] + '"/>'
+																	+ '    <div>' + currentValue["title"] + '</div>'
+																	+ '  </a>'
+																	+ '</div>';
 													
-												jQuery(tag).appendTo('#' + key);
-											});
+													jQuery(tag).appendTo('#' + key);
+												});
 									
-											jQuery('img').unveil();
+												jQuery('img').unveil();
+											});	
 										}
 						
 										jQuery('.subject-item')
