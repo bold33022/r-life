@@ -251,10 +251,10 @@
 
 												data[key].forEach(function(currentValue, index) {
 
-													var tag = '<div class="subject-item col-sm-3" data-video_id="' + currentValue["video_id"] + '">'
-																	+	'  <a href="' + currentValue["href"] + '" title="' + currentValue["title"] + '">'
-																	+ '    <img class="img-thumbnail" src="https://fakeimg.pl/350x200/?text=Wait" data-src="' + currentValue["img"] + '" alt="' + currentValue["title"] + '" />'
-																	+ '    <div>' + currentValue["title"] + '</div>'
+													var tag = '<div class="subject-item col-sm-3">'
+																	+	'  <a href="' + currentValue["short_url"] + '" title="' + currentValue["video_name"] + '">'
+																	+ '    <img class="img-thumbnail" src="https://fakeimg.pl/350x200/?text=Wait" data-src="' + currentValue["poster"] + '" alt="' + currentValue["video_name"] + '" data-video_code="' + currentValue["video_code"] + '" data-short_url="' + currentValue["short_url"] + '" />'
+																	+ '    <div>' + currentValue["video_name"] + '</div>'
 																	+ '  </a>'
 																	+ '</div>';
 													
@@ -265,68 +265,68 @@
 													if ((index == (data[key].length - 1)) || ((index % 4) == 3)) jQuery(raw).appendTo('#life-area');
 												});
 											}										
-																					
+
 											jQuery('img').unveil();
-										});
-						
-										jQuery('.subject-item')
-										.on('click', function(e) {
+											
+											jQuery('.subject-item')
+											.on('click', function(e) {
 					
-											var modalId = 'modalSuject' + Math.random().toString(36).substr(2, 6);
-											var self = jQuery(this);
-											var video_id;
+												var modalId = 'modalSuject' + Math.random().toString(36).substr(2, 6);
+												var self = jQuery(this);
+												var video_code;
 						
-											var tag = '<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog" aria-hidden="true">'
-															+ '  <div class="modal-dialog" style="width: 90%;">'
-															+ '    <div class="modal-content">'
-															+ '      <div class="modal-header">'
-															+ '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'
-															+ '        <h4 class="modal-title">' + jQuery(this).find('img').attr('alt') + '</h4>'
-															+ '      </div>'
-															+ '      <div class="modal-body" style="text-align: center;">'
-															+ '        <img class="img-thumbnail" src="' + jQuery(this).find('img').attr('data-src') + '">'
-															+ '      </div>'
-															+ '      <div class="modal-footer">'
-															+ '        <button type="button" class="btn btn-primary">View</button>'
-															+ '        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
-															+ '      </div>'
-															+ '    </div>'
-															+ '  </div>'
-															+ '</div>';
+												var tag = '<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog" aria-hidden="true">'
+																+ '  <div class="modal-dialog" style="width: 90%;">'
+																+ '    <div class="modal-content">'
+																+ '      <div class="modal-header">'
+																+ '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'
+																+ '        <h4 class="modal-title">' + jQuery(this).find('img').attr('alt') + '</h4>'
+																+ '      </div>'
+																+ '      <div class="modal-body" style="text-align: center;">'
+																+ '        <img class="img-thumbnail" src="' + jQuery(this).find('img').attr('data-src') + '">'
+																+ '      </div>'
+																+ '      <div class="modal-footer">'
+																+ '        <button type="button" class="btn btn-primary">View</button>'
+																+ '        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
+																+ '      </div>'
+																+ '    </div>'
+																+ '  </div>'
+																+ '</div>';
 										
-											if (jQuery('.navbar-toggle').is(':visible') == false) {
+												if (jQuery('.navbar-toggle').is(':visible') == false) {
 						
-												e.preventDefault();
+													e.preventDefault();
 							
-												jQuery(tag).appendTo('body');
+													jQuery(tag).appendTo('body');
 							
-												jQuery('#' + modalId + ' .modal-footer .btn-primary').on('click', function(e) {
+													jQuery('#' + modalId + ' .modal-footer .btn-primary').on('click', function(e) {
 						
-													video_id= self.attr('data-video_id');
+														video_code = self.find('img').attr('data-video_code');
 								
-													jQuery('#' + modalId).modal('hide');
-												});
+														jQuery('#' + modalId).modal('hide');
+													});
 							
-												jQuery('#' + modalId).on('hidden.bs.modal', function(e) {
+													jQuery('#' + modalId).on('hidden.bs.modal', function(e) {
 							
-													jQuery('#' + modalId + ' .modal-footer .btn-primary').off('click');
+														jQuery('#' + modalId + ' .modal-footer .btn-primary').off('click');
 								
-													jQuery('#' + modalId).remove();
+														jQuery('#' + modalId).remove();
 								
-													if (typeof video_id != 'undefined') {
+														if (typeof video_code != 'undefined') {
 												
-														window.location.href = self.find('a').attr('href');
-													}
-												});
+															window.location.href = self.find('a').attr('href');
+														}
+													});
 						
-												jQuery('#' + modalId).modal('show');
-											}
+													jQuery('#' + modalId).modal('show');
+												}
+											});
+						
+											closeLoadingEffect();
 										});
-						
-										closeLoadingEffect();
 									});
 								}
-							);
+							);	// end showLoadingEffect
 						}
 					});	// end require
 				});	// end document ready
