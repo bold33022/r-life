@@ -1,0 +1,7 @@
+{
+	"main": "nw_main.js",
+	"name": "MP4Player",
+	"version": "0.0.1",
+	"description": "", 
+	"author": "ace"
+}
