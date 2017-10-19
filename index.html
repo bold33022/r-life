@@ -81,7 +81,7 @@
         <div class="collapse navbar-collapse" id="bs-navbar-collapse">
 					<form class="navbar-form" role="search">
 						<div class="input-group">
-							<input type="text" class="form-control" id="inpSearch" placeholder="Search Idol" value="" />
+							<input type="text" class="form-control" id="inpSearch" placeholder="Search" value="" />
 							<span class="input-group-btn">
 								<button type="button" class="btn" id="btnSearch"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 							</span>
@@ -100,6 +100,7 @@
 				function playVideo(source) {
 				
 					var videoSrcOption;
+					var iframe;
 						
 					if (typeof source == 'string') {
 					
@@ -114,35 +115,48 @@
 					}
 					
 					if (typeof videoSrcOption != 'undefined') {
+						
+						if (videoSrcOption["src"].search(/openload.co/i) != -1) {
 							
-						requirejs(["tw.ace33022.util.browser.VideoUtils"], function(VideoUtils) {
+							iframe = jQuery('<iframe style="width: 100%; height: 100%;" />');
+							iframe.on('load', function(e) {
 								
-							var videoId = 'video' + Math.random().toString(36).substr(2, 6);
-							var videojs;
+							});	
+							
+							iframe.attr('src', videoSrcOption["src"]);
+							jQuery('#life-area').empty().append(iframe);
+						}
+						else {
+							
+							requirejs(["tw.ace33022.util.browser.VideoUtils"], function(VideoUtils) {
 								
-							var options = {
-							
-								"hotkeys": {
+								var videoId = 'video' + Math.random().toString(36).substr(2, 6);
+								var videojs;
 								
-									"seekStep": 10,
-									"volumeStep": 0.1
-								}
-							};
+								var options = {
+							
+									"hotkeys": {
 								
-							var tag = '<div class="row" style="height: 100%;">'
-											+	'  <div id="work-area" class="col" style="height: 100%;">'
-											+ '    <video id="' + videoId + '" preload="none" />'
-											+ '  </div>'
-											+ '</div>';
-							jQuery('#life-area').empty().append(tag);
+										"seekStep": 10,
+										"volumeStep": 0.1
+									}
+								};
+								
+								var tag = '<div class="row" style="height: 100%;">'
+												+	'  <div id="work-area" class="col" style="height: 100%;">'
+												+ '    <video id="' + videoId + '" preload="none" />'
+												+ '  </div>'
+												+ '</div>';
+								jQuery('#life-area').empty().append(tag);
 							
-							videojs = VideoUtils.getVideojs(videoId, options);
+								videojs = VideoUtils.getVideojs(videoId, options);
 							
-							videojs.volume(0.5);
-							videojs.src(videoSrcOption);
+								videojs.volume(0.5);
+								videojs.src(videoSrcOption);
 							
-							videojs.play();
-						});
+								videojs.play();
+							});
+						}
 					}
 				};
 				
