@@ -92,7 +92,7 @@
       </div>
     </nav>
 
-		<div class="container-fluid" id="life-area" style="padding-top: 50px; height: 100%;" />
+		<div class="container-fluid" id="life-area" style="padding-top: 50px; height: 100%;"></div>
 
 		<script type="text/javascript">
 
@@ -101,7 +101,9 @@
 				function playVideo(source) {
 				
 					var videoSrcOption;
-					var iframe;
+					var raw = jQuery('<div class="row" style="height: 100%;"></div>');
+					var col = jQuery('<div class="col" style="height: 100%;"></div>');
+					var iframe = jQuery('<iframe style="width: 100%; height: 100%;"></iframe>');
 						
 					if (typeof source === 'string') {
 					
@@ -119,13 +121,18 @@
 						
 						if (videoSrcOption["src"].search(/openload.co/i) !== -1) {
 							
-							iframe = jQuery('<iframe style="width: 100%; height: 100%;"></iframe>');
-							iframe.on('load', function(e) {
-								
-							});	
+							iframe.on('load', function(e) {});
+							
+							iframe.attr('scrolling', 'no');
+							iframe.attr('frameborder', '0');
+							iframe.attr('marginwidth', '0');
+							iframe.attr('marginheight', '0');
 							
 							iframe.attr('src', videoSrcOption["src"]);
-							jQuery('#life-area').empty().append(iframe);
+							
+							col.append(iframe).appendTo(raw);
+							
+							jQuery('#life-area').empty().append(raw);
 						}
 						else {
 							
@@ -269,7 +276,7 @@
 																	+ '  </a>'
 																	+ '</div>';
 													
-													if ((index % 4) === 0) raw = jQuery('<div class="row" />');
+													if ((index % 4) === 0) raw = jQuery('<div class="row"></div>');
 													
 													jQuery(tag).appendTo(raw);
 													
