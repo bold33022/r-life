@@ -223,23 +223,10 @@
 
 					jQuery('#btnSearch').on('click', function(e) {
 
-						requirejs(["tw.ace33022.util.browser.FormUtils"], function(FormUtils) {
+						if (jQuery('#inpSearch').val() !== '') {
 							
-							if (jQuery('#inpSearch').val() !== '') {
-
-								if ((jQuery('#life-area').find('video').length !== 0) || (jQuery('#life-area').find('iframe').length !== 0)) {
-									
-									FormUtils.showConfirmMessage('放棄目前正在播放的影片？', function() {
-										
-										window.location.href = window.location.origin + window.location.pathname + '?' + 'idol=' + jQuery('#inpSearch').val();
-									});
-								}
-								else {
-									
-									window.location.href = window.location.origin + window.location.pathname + '?' + 'idol=' + jQuery('#inpSearch').val();
-								}
-							}
-						});
+							window.location.href = window.location.origin + window.location.pathname + '?' + 'search=' + jQuery('#inpSearch').val();
+						}
 					});
 
 					requirejs(["tw.ace33022.util.browser.ReUtils", "tw.ace33022.util.browser.FormUtils"], function(ReUtils, FormUtils) {
@@ -282,13 +269,11 @@
 
 									var url = 'https://script.google.com/macros/s/AKfycbztxaQLHiCGNsn6Oil7nl-o1fOhUHBTWR3DG87KJvJa7m45B2Q/exec';
 					
-									if (typeof params["idol"] !== 'undefined') {
+									if (typeof params["search"] !== 'undefined') {
 
-										document.title = document.title + ' - ' + params["idol"];
-						
-										url += '?' + 'idol' + '=' + params["idol"];
+										url += '?' + 'search' + '=' + params["search"];
 									
-										jQuery('#inpSearch').val(params["idol"]);
+										jQuery('#inpSearch').val(params["search"]);
 									}
 							
 									jQuery.getJSON(url, function(data, textStatus, jqXHR) {
@@ -316,82 +301,91 @@
 												});
 											}
 											
-											arrImg.forEach(function(element, index) {
-												
-												var div = jQuery('<div class="subject-item col-sm-3"></div>');
-												var a = jQuery('<a></a>').append(element);
-												
-												a.attr('href', element.attr('data-short_url'));
-												a.attr('title', element.attr('alt'));
-												
-												a.append('<div>' + element.attr('alt') + '</div>');
-																
-												if ((index % 4) === 0) row = jQuery('<div class="row"></div>');
-												
-												div.append(a).appendTo(row);
-												
-												if ((index % 4) === 3) jQuery(row).appendTo('#life-area');
-											});
+											if (arrImg.length === 0) {
 
-											jQuery('img').unveil();
-											
-											jQuery('.subject-item')
-											.on('click', function(e) {
-					
-												var modalId = 'modalSuject' + Math.random().toString(36).substr(2, 6);
-												var self = jQuery(this);
-												var video_code;
-						
-												var tag = '<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog" aria-hidden="true">'
-																+ '  <div class="modal-dialog" style="width: 90%;">'
-																+ '    <div class="modal-content">'
-																+ '      <div class="modal-header">'
-																+ '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'
-																+ '        <h4 class="modal-title">' + jQuery(this).find('img').attr('alt') + '</h4>'
-																+ '      </div>'
-																+ '      <div class="modal-body" style="text-align: center;">'
-																+ '        <img class="img-thumbnail" src="' + jQuery(this).find('img').attr('src') + '">'
-																+ '      </div>'
-																+ '      <div class="modal-footer">'
-																+ '        <button type="button" class="btn btn-primary">View</button>'
-																+ '        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
-																+ '      </div>'
-																+ '    </div>'
-																+ '  </div>'
-																+ '</div>';
-										
-												if (jQuery('.navbar-toggle').is(':visible') === false) {
-						
-													e.preventDefault();
-							
-													jQuery(tag).appendTo('body');
-							
-													jQuery('#' + modalId + ' .modal-footer .btn-primary').on('click', function(e) {
-						
-														video_code = self.find('img').attr('data-video_code');
-								
-														jQuery('#' + modalId).modal('hide');
-													});
-							
-													jQuery('#' + modalId).on('hidden.bs.modal', function(e) {
-							
-														jQuery('#' + modalId + ' .modal-footer .btn-primary').off('click');
-								
-														jQuery('#' + modalId).remove();
-								
-														if (typeof video_code !== 'undefined') {
+												closeLoadingEffect();
 												
-															window.location.href = self.find('a').attr('href');
-														}
-													});
+												FormUtils.showMessage('查無資料！！', function() {window.location.href = window.location.origin + window.location.pathname;});
+											}
+											else {
+												
+												arrImg.forEach(function(element, index) {
+												
+													var div = jQuery('<div class="subject-item col-sm-3"></div>');
+													var a = jQuery('<a></a>').append(element);
+												
+													a.attr('href', element.attr('data-short_url'));
+													a.attr('title', element.attr('alt'));
+												
+													a.append('<div>' + element.attr('alt') + '</div>');
+																
+													if ((index % 4) === 0) row = jQuery('<div class="row"></div>');
+												
+													div.append(a).appendTo(row);
+												
+													if (((index % 4) === 3) || (index === (arrImg.length - 1))) jQuery(row).appendTo('#life-area');
+												});
+
+												jQuery('img').unveil();
+											
+												jQuery('.subject-item')
+												.on('click', function(e) {
+					
+													var modalId = 'modalSuject' + Math.random().toString(36).substr(2, 6);
+													var self = jQuery(this);
+													var video_code;
 						
-													jQuery('#' + modalId).modal('show');
-												}
-											});
+													var tag = '<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog" aria-hidden="true">'
+																	+ '  <div class="modal-dialog" style="width: 90%;">'
+																	+ '    <div class="modal-content">'
+																	+ '      <div class="modal-header">'
+																	+ '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'
+																	+ '        <h4 class="modal-title">' + jQuery(this).find('img').attr('alt') + '</h4>'
+																	+ '      </div>'
+																	+ '      <div class="modal-body" style="text-align: center;">'
+																	+ '        <img class="img-thumbnail" src="' + jQuery(this).find('img').attr('src') + '">'
+																	+ '      </div>'
+																	+ '      <div class="modal-footer">'
+																	+ '        <button type="button" class="btn btn-primary">View</button>'
+																	+ '        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
+																	+ '      </div>'
+																	+ '    </div>'
+																	+ '  </div>'
+																	+ '</div>';
+										
+													if (jQuery('.navbar-toggle').is(':visible') === false) {
 						
-											closeLoadingEffect();
+														e.preventDefault();
+							
+														jQuery(tag).appendTo('body');
+							
+														jQuery('#' + modalId + ' .modal-footer .btn-primary').on('click', function(e) {
+						
+															video_code = self.find('img').attr('data-video_code');
+								
+															jQuery('#' + modalId).modal('hide');
+														});
+							
+														jQuery('#' + modalId).on('hidden.bs.modal', function(e) {
+							
+															jQuery('#' + modalId + ' .modal-footer .btn-primary').off('click');
+								
+															jQuery('#' + modalId).remove();
+								
+															if (typeof video_code !== 'undefined') {
+												
+																window.location.href = self.find('a').attr('href');
+															}
+														});
+						
+														jQuery('#' + modalId).modal('show');
+													}
+												});
+												
+												closeLoadingEffect();
+											}
 										});
-									});
+									});	// end getJSON
 								}
 							);	// end showLoadingEffect
 						}
