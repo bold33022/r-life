@@ -216,10 +216,17 @@
 
 						requirejs(["tw.ace33022.util.browser.FormUtils"], function(FormUtils) {
 							
-							FormUtils.showConfirmMessage('放棄目前正在播放的影片？', function() {
+							if ((jQuery('#life-area').find('video').length !== 0) || (jQuery('#life-area').find('iframe').length !== 0)) {
+								
+								FormUtils.showConfirmMessage('放棄目前正在播放的影片？', function() {
+								
+									window.location.href = window.location.origin + window.location.pathname;
+								});
+							}
+							else {
 								
 								window.location.href = window.location.origin + window.location.pathname;
-							});
+							}
 						});
 					});
 
@@ -235,6 +242,10 @@
 										
 										window.location.href = window.location.origin + window.location.pathname + '?' + 'idol=' + jQuery('#inpSearch').val();
 									});
+								}
+								else {
+									
+									window.location.href = window.location.origin + window.location.pathname + '?' + 'idol=' + jQuery('#inpSearch').val();
 								}
 							}
 						});
