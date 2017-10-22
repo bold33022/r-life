@@ -97,11 +97,11 @@
 		<script type="text/javascript">
 
       requirejs(["bootstrap"], function() {
-
+      	
 				function playVideo(source) {
 				
 					var videoSrcOption;
-					var raw = jQuery('<div class="row" style="height: 100%;"></div>');
+					var row = jQuery('<div class="row" style="height: 100%;"></div>');
 					var col = jQuery('<div class="col" style="height: 100%;"></div>');
 					var iframe = jQuery('<iframe style="width: 100%; height: 100%;"></iframe>');
 						
@@ -121,6 +121,8 @@
 						
 						if (videoSrcOption["src"].search(/openload.co/i) !== -1) {
 							
+							jQuery('body').css('overflow', 'hidden');
+							
 							iframe.on('load', function(e) {});
 							
 							iframe.attr('scrolling', 'no');
@@ -130,9 +132,9 @@
 							
 							iframe.attr('src', videoSrcOption["src"]);
 							
-							col.append(iframe).appendTo(raw);
+							col.append(iframe).appendTo(row);
 							
-							jQuery('#life-area').empty().append(raw);
+							jQuery('#life-area').empty().append(row);
 						}
 						else {
 							
@@ -245,6 +247,7 @@
 						// ReUtils.beforeInitEnv(function() {});
 						
 						var params = ReUtils.getURLParameters();
+						var arrImg = new Array();
 						
 						if ((typeof params["video_code"] !== 'undefined') && (document.referrer !== '')) {
 							
@@ -292,26 +295,43 @@
 
 										requirejs(["jquery.unveil"], function() {
 											
-											var raw;
+											var row;
 											
 											for (var key in data) {
 
 												data[key].forEach(function(currentValue, index) {
-
-													var tag = '<div class="subject-item col-sm-3">'
-																	+	'  <a href="' + currentValue["short_url"] + '" title="' + currentValue["video_name"] + '">'
-																	+ '    <img class="img-thumbnail" src="https://fakeimg.pl/350x200/?text=Wait" data-src="' + currentValue["poster"] + '" alt="' + currentValue["video_name"] + '" data-video_code="' + currentValue["video_code"] + '" data-short_url="' + currentValue["short_url"] + '" />'
-																	+ '    <div>' + currentValue["video_name"] + '</div>'
-																	+ '  </a>'
-																	+ '</div>';
 													
-													if ((index % 4) === 0) raw = jQuery('<div class="row"></div>');
+													var img = jQuery('<img></img>');
 													
-													jQuery(tag).appendTo(raw);
+													img.addClass('img-thumbnail');
 													
-													if ((index === (data[key].length - 1)) || ((index % 4) === 3)) jQuery(raw).appendTo('#life-area');
+													img.attr('alt', currentValue["video_name"]);
+													img.attr('src', 'data:image/png;base64,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');
+													
+													img.attr('data-src', currentValue["poster"]);
+													img.attr('data-video_code', currentValue["video_code"]);
+													img.attr('data-short_url', currentValue["short_url"]);
+													
+													arrImg.push(img);
 												});
-											}										
+											}
+											
+											arrImg.forEach(function(element, index) {
+												
+												var div = jQuery('<div class="subject-item col-sm-3"></div>');
+												var a = jQuery('<a></a>').append(element);
+												
+												a.attr('href', element.attr('data-short_url'));
+												a.attr('title', element.attr('alt'));
+												
+												a.append('<div>' + element.attr('alt') + '</div>');
+																
+												if ((index % 4) === 0) row = jQuery('<div class="row"></div>');
+												
+												div.append(a).appendTo(row);
+												
+												if ((index % 4) === 3) jQuery(row).appendTo('#life-area');
+											});
 
 											jQuery('img').unveil();
 											
@@ -330,7 +350,7 @@
 																+ '        <h4 class="modal-title">' + jQuery(this).find('img').attr('alt') + '</h4>'
 																+ '      </div>'
 																+ '      <div class="modal-body" style="text-align: center;">'
-																+ '        <img class="img-thumbnail" src="' + jQuery(this).find('img').attr('data-src') + '">'
+																+ '        <img class="img-thumbnail" src="' + jQuery(this).find('img').attr('src') + '">'
 																+ '      </div>'
 																+ '      <div class="modal-footer">'
 																+ '        <button type="button" class="btn btn-primary">View</button>'
