@@ -234,6 +234,8 @@
 						var params = ReUtils.getURLParameters();
 						var arrImg = new Array();
 						
+						console.log('referrer:' + document.referrer);
+						
 						if ((typeof params["video_code"] !== 'undefined') && (document.referrer !== '')) {
 							
 							FormUtils.showMarqueebar(
