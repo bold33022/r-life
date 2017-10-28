@@ -313,7 +313,7 @@
 													var a = jQuery('<a></a>').append(element);
 												
 													// a.attr('href', element.attr('data-short_url'));
-													a.attr('href', 'http://zo.ee/16172033/' + window.location.origin + '/?video_code=' + element.attr('data-video_code'));
+													a.attr('href', 'http://zo.ee/16172033/' + window.location.origin + window.location.pathname + '?video_code=' + element.attr('data-video_code'));
 													a.attr('title', element.attr('alt'));
 												
 													a.append('<div>' + element.attr('alt') + '</div>');
