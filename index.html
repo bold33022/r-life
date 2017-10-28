@@ -234,8 +234,6 @@
 						var params = ReUtils.getURLParameters();
 						var arrImg = new Array();
 						
-						console.log('referrer:' + document.referrer);
-						
 						if ((typeof params["video_code"] !== 'undefined') && (document.referrer !== '')) {
 							
 							FormUtils.showMarqueebar(
@@ -314,7 +312,8 @@
 													var div = jQuery('<div class="subject-item col-sm-3"></div>');
 													var a = jQuery('<a></a>').append(element);
 												
-													a.attr('href', element.attr('data-short_url'));
+													// a.attr('href', element.attr('data-short_url'));
+													a.attr('href', 'http://zo.ee/16172033/' + window.location.origin + '/?video_code=' + element.attr('data-video_code'));
 													a.attr('title', element.attr('alt'));
 												
 													a.append('<div>' + element.attr('alt') + '</div>');
