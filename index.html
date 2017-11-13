@@ -78,14 +78,14 @@
         </div>
 
         <div class="collapse navbar-collapse" id="bs-navbar-collapse">
-					<form class="navbar-form" role="search">
+					<div class="navbar-form" role="search">
 						<div class="input-group">
 							<input type="text" class="form-control" id="inpSearch" placeholder="Search" value="" />
 							<span class="input-group-btn">
 								<button type="button" class="btn" id="btnSearch"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 							</span>
 						</div>
-					</form>
+					</div>
 				</div>
       </div>
     </nav>
@@ -202,16 +202,6 @@
 						jQuery('#life-area').find('iframe').focus();
 					});
 					
-					jQuery('.navbar-form > div > input').on('keydown', function(e) {
-						
-						if (e.keyCode === 13) {
-							
-							e.preventDefault();
-								
-							return false;
-						}
-					});
-						
 					jQuery('.navbar-brand').on('click', function(e) {
 
 						e.preventDefault();
@@ -219,18 +209,14 @@
 						window.location.href = window.location.origin + window.location.pathname;
 					});
 
-					jQuery('#btnSearch').on('click', function(e) {
+					jQuery('#inpSearch').on('focus', function(e) {jQuery(this).select();});
+					
+					jQuery('#inpSearch').on('keydown', function(e) {if (e.keyCode === 13) jQuery('#btnSearch').trigger('click');});
 
-						if (jQuery('#inpSearch').val() !== '') {
-							
-							window.location.href = window.location.origin + window.location.pathname + '?' + 'search=' + jQuery('#inpSearch').val();
-						}
-					});
+					jQuery('#btnSearch').on('click', function(e) {if (jQuery('#inpSearch').val() !== '') window.location.href = window.location.origin + window.location.pathname + '?' + 'search=' + jQuery('#inpSearch').val();});
 
 					requirejs(["tw.ace33022.util.browser.ReUtils", "tw.ace33022.util.browser.FormUtils"], function(ReUtils, FormUtils) {
 					
-						// ReUtils.beforeInitEnv(function() {});
-						
 						var params = ReUtils.getURLParameters();
 						var arrImg = new Array();
 						
