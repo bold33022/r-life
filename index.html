@@ -33,6 +33,8 @@
 
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 		
+		<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css" />
+		
 		<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.2.0/video-js.css" />
 
     <script type="text/javascript" src="https://ace33022.github.io/tw/ace33022/NameSpace.js"></script>
@@ -77,15 +79,18 @@
           <a class="navbar-brand" href="#">Random Life</a>
         </div>
 
-        <div class="collapse navbar-collapse" id="bs-navbar-collapse">
-					<div class="navbar-form" role="search">
-						<div class="input-group">
-							<input type="text" class="form-control" id="inpSearch" placeholder="Search" value="" />
-							<span class="input-group-btn">
-								<button type="button" class="btn" id="btnSearch"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-							</span>
-						</div>
-					</div>
+        <div id="bs-navbar-collapse" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="navbar-form" role="search">
+							<div class="input-group">
+								<input type="text" class="form-control" id="inpSearch" placeholder="Search" value="" />
+								<span class="input-group-btn">
+									<button type="button" class="btn" id="btnSearch"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+								</span>
+							</div>
+						</li>
+						<li><a href="#">Category</a></li>
+					</ul>
 				</div>
       </div>
     </nav>
@@ -210,6 +215,77 @@
 
 					jQuery('#btnSearch').on('click', function(e) {if (jQuery('#inpSearch').val() !== '') window.location.href = window.location.origin + window.location.pathname + '?' + 'search=' + jQuery('#inpSearch').val();});
 
+					jQuery('#bs-navbar-collapse > ul > li:eq(1)').on('click', function(event) {
+					
+						event.preventDefault();
+					
+						requirejs(["tw.ace33022.util.browser.FormUtils", "jasny-rowlink"], function(FormUtils) {
+						
+							var selItem;
+							
+							var modalId = 'modal' + Math.random().toString(36).substr(2, 6);
+							
+							FormUtils.showProgressbar(
+
+								'資料處理中‧‧‧',
+								function(closeProgressbar) {
+
+									var url = 'https://script.google.com/macros/s/AKfycbyZDbEK4W8Xfxm5iznnq68_zCd5qa2Ubf-__E4zksiHTsMmKPI/exec';
+							
+									var tag = '<div class="modal fade" tabindex="-1" role="dialog" id="' + modalId + '">'
+													+ '  <div class="modal-dialog" role="document">'
+													+ '    <div class="modal-content">'
+													+ '      <div class="modal-body">'
+													+ '        <table class="table table-bordered table-condensed table-hover">'
+													+ '          <tbody class="rowlink"></tbody>'
+													+ '        </table>'
+													+ '      </div>'
+													+ '      <div class="modal-footer">'
+													+ '        <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>'
+													+ '      </div>'
+													+ '    </div>'
+													+ '  </div>'
+													+ '</div>';
+											
+									jQuery(tag).appendTo('body');
+					
+									jQuery('#' + modalId).on('hidden.bs.modal', function() {
+							
+										if (typeof selItem !== 'undefined') {
+								
+											window.location.href = window.location.origin + window.location.pathname + '?' + 'search=' + selItem;
+										}
+									});
+									
+									jQuery.getJSON(url, function(data, textStatus, jqXHR) {
+
+										var tag = '';
+										
+										data.forEach(function(currentValue, index) {
+										
+											tag += '<tr><td style="text-align: center;">' + currentValue["category_name"] + '</td></tr>';
+										});
+										
+										jQuery('#' + modalId).find('tbody').append(tag);
+										
+										jQuery('#' + modalId).find('td').on('click', function(event) {
+								
+											selItem = jQuery(event.toElement).text();
+									
+											jQuery('#' + modalId).modal('hide');
+										});
+							
+										closeProgressbar();
+									});
+								},
+								function() {
+								
+									jQuery('#' + modalId).modal('show');
+								}
+							);
+						});
+					});
+					
 					requirejs(["tw.ace33022.util.browser.ReUtils", "tw.ace33022.util.browser.FormUtils"], function(ReUtils, FormUtils) {
 					
 						var params = ReUtils.getURLParameters();
