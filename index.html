@@ -170,6 +170,8 @@
 				
         jQuery(document).ready(function() {
 				
+					jQuery('.navbar-brand').attr('href', window.location.origin);
+					
 					window.addEventListener('beforeunload', function(e) {
 					
 						var confirmationMessage = 'Abort playing video?';
@@ -202,13 +204,6 @@
 						jQuery('#life-area').find('iframe').focus();
 					});
 					
-					jQuery('.navbar-brand').on('click', function(e) {
-
-						e.preventDefault();
-						
-						window.location.href = window.location.origin;
-					});
-
 					jQuery('#inpSearch').on('focus', function(e) {jQuery(this).select();});
 					
 					jQuery('#inpSearch').on('keydown', function(e) {if (e.keyCode === 13) jQuery('#btnSearch').trigger('click');});
