@@ -170,7 +170,7 @@
 				
         jQuery(document).ready(function() {
 				
-					jQuery('.navbar-brand').attr('href', window.location.origin);
+					jQuery('.navbar-brand').attr('href', window.location.origin + window.location.pathname);
 					
 					window.addEventListener('beforeunload', function(e) {
 					
