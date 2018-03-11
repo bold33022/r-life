@@ -82,6 +82,7 @@
         <div id="bs-navbar-collapse" class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
 						<li><a href="#">Category</a></li>
+						<li><a href="#">Actress</a></li>
 						<li class="navbar-form" role="search">
 							<div class="input-group">
 								<input type="text" class="form-control" id="inpSearch" placeholder="Search" value="" />
@@ -281,6 +282,104 @@
 											selItem = jQuery(event.toElement).text();
 									
 											jQuery('#' + modalId).modal('hide');
+										});
+							
+										closeProgressbar();
+									});
+								},
+								function() {
+								
+									jQuery('#' + modalId).modal('show');
+								}
+							);
+						});
+					});
+					
+					jQuery('#bs-navbar-collapse > ul > li:eq(1)').on('click', function(event) {
+					
+						event.preventDefault();
+					
+						requirejs(["tw.ace33022.util.browser.FormUtils", "wordcloud", "jasny-rowlink"], function(FormUtils, wordcloud) {
+						
+							var selItem;
+							
+							var modalId = 'modal' + Math.random().toString(36).substr(2, 6);
+							
+							FormUtils.showProgressbar(
+
+								'Loading‧‧‧',
+								function(closeProgressbar) {
+
+									var url = 'https://script.google.com/macros/s/AKfycbywYzx-2qX5GbWFLXnGjhjNYnJEH7404d-uh_aNH_PXbhii22Ye/exec';
+							
+									var tag = '<div class="modal fade" tabindex="-1" role="dialog" id="' + modalId + '">'
+													+ '  <div class="modal-dialog" role="document">'
+													+ '    <div class="modal-content">'
+													+ '      <div class="modal-body">'
+													+ '        <canvas></canvas>'
+													+ '      </div>'
+													+ '      <div class="modal-footer">'
+													+ '        <button type="button" class="btn btn-primary center-block" data-dismiss="modal">取消</button>'
+													+ '      </div>'
+													+ '    </div>'
+													+ '  </div>'
+													+ '</div>';
+											
+									jQuery(tag).appendTo('body');
+					
+									jQuery('#' + modalId).on('show.bs.modal', function() {
+							
+										jQuery(this).find('.modal-dialog').css('width', '100%');
+										jQuery(this).find('.modal-dialog').css('height', 'auto');
+										jQuery(this).find('.modal-dialog').css('margin', 0);
+										jQuery(this).find('.modal-dialog').css('padding', 0);
+										
+										jQuery(this).find('.modal-content').css('min-height', '100%');
+										
+										jQuery(this).find('canvas').css('width', '100%');
+									});
+									
+									jQuery('#' + modalId).on('hidden.bs.modal', function() {
+							
+										if (typeof selItem !== 'undefined') {
+								
+											window.location.href = window.location.origin + window.location.pathname + '?' + 'search=' + selItem;
+										}
+									});
+									
+									jQuery.getJSON(url, function(data, textStatus, jqXHR) {
+
+										var prop;
+										var fontSize;
+										var arrData = new Array();
+										
+										for (prop in data) {
+										
+											fontSize = 8;
+											
+											if (data[prop] >= 20) {
+											
+												fontSize = 24;
+											}
+											else if (data[prop] >= 10) {
+											
+												fontSize = 16;
+											}
+											
+											arrData.push([prop, fontSize]);
+										}
+										
+										wordcloud(jQuery('#' + modalId).find('canvas')[0], {
+										
+											"list": arrData,
+											"click": function(item, dimension, event) {
+											
+												selItem = item[0];
+									
+												jQuery('#' + modalId).modal('hide');
+											},
+											"rotateRatio": 0.5,
+											"rotationSteps": 2,
 										});
 							
 										closeProgressbar();
