@@ -303,7 +303,7 @@
 					
 						event.preventDefault();
 					
-						requirejs(["tw.ace33022.util.browser.FormUtils", "wordcloud", "jasny-rowlink"], function(FormUtils, wordcloud) {
+						requirejs(["tw.ace33022.util.browser.FormUtils", "wordcloud", "underscore"], function(FormUtils, wordcloud) {
 						
 							var selItem;
 							
@@ -361,8 +361,6 @@
 										
 											fontSize = 8;
 											
-											console.log(data[prop]);
-											
 											if (data[prop] >= 20) {
 											
 												fontSize = 24;
@@ -373,6 +371,10 @@
 											}
 											
 											arrData.push([prop, fontSize]);
+											
+											arrData = _.sortBy(arrData, function(arr){ return arr[1]; });
+											
+											console.log(arrData);
 										}
 										
 										wordcloud(jQuery('#' + modalId).find('canvas')[0], {
