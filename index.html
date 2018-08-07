@@ -217,11 +217,11 @@
 						}
 					});
 					
-					jQuery('#inpSearch').on('focus', function(event) {jQuery(this).select();});
+					jQuery('#inpSearch').on('focus', function(event) { jQuery(this).select(); });
 					
-					jQuery('#btnSearch').on('click', function(event) {if (jQuery('#inpSearch').val() !== '') window.location.href = window.location.origin + window.location.pathname + '?' + 'search=' + jQuery('#inpSearch').val();});
+					jQuery('#btnSearch').on('click', function(event) { if (jQuery('#inpSearch').val() !== '') window.location.href = window.location.origin + window.location.pathname + '?' + 'search=' + jQuery('#inpSearch').val(); });
 
-					jQuery('#inpSearch').on('keydown', function(event) {if (e.keyCode === 13) jQuery('#btnSearch').trigger('click');});
+					jQuery('#inpSearch').on('keydown', function(event) { if (event.keyCode === 13) jQuery('#btnSearch').trigger('click'); });
 
 					jQuery('#bs-navbar-collapse > ul > li:eq(0)').on('click', function(event) {
 					
