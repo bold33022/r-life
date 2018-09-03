@@ -2,6 +2,6 @@
 	"main": "nw_main.js",
 	"name": "r-life",
 	"version": "0.0.1",
-	"description": "", 
+	"description": "Random Life", 
 	"author": "ace"
 }
