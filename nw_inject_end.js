@@ -391,10 +391,7 @@ Configurations.loadJS(Configurations.requirejsFile, function() {
 							}
 							else {
 
-								FormUtils.showMessage('無法取得影片播放資料！', function() {
-
-									window.location.href = window.location.origin + window.location.pathname;
-								});
+								FormUtils.showMessage('抱歉，該影片目前無法觀看，將儘快處理！', function() { window.location.href = window.location.origin + window.location.pathname; });
 							}
 						});
 					}
