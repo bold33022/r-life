@@ -159,7 +159,7 @@ Configurations.loadJS(Configurations.requirejsFile, function() {
 
 			jQuery(window).on('focus', function(event) {
 
-				if ((jQuery('.modal-open').length == 0) && (jQuery('.modal-backdrop').length == 0)) {
+				if ((jQuery('.modal-open').length === 0) && (jQuery('.modal-backdrop').length === 0)) {
 
 					jQuery('#' + inpSearchId).focus();
 
@@ -190,6 +190,8 @@ Configurations.loadJS(Configurations.requirejsFile, function() {
 			jQuery('#' + btnSearchId).on('click', function(event) { if (jQuery('#' + inpSearchId).val() != '') window.location.href = window.location.origin + window.location.pathname + '?' + 'search=' + jQuery('#' + inpSearchId).val(); });
 
 			jQuery('#' + inpSearchId).on('keydown', function(event) { if (event.keyCode == 13) jQuery('#' + btnSearchId).trigger('click'); });
+
+			jQuery('.navbar-brand').attr('href', window.location.origin + window.location.pathname);
 
 			jQuery('#bs-navbar-collapse > ul > li:eq(0)').on('click', function(event) {
 
@@ -369,8 +371,6 @@ Configurations.loadJS(Configurations.requirejsFile, function() {
 					);
 				});
 			});
-
-			jQuery('.navbar-brand').attr('href', window.location.origin + window.location.pathname);
 
 			if ((typeof params["video_code"] !== 'undefined') && (document.referrer !== '')) {
 
