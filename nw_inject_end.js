@@ -1,28 +1,23 @@
 /**
  *
- * r-life
- *
- * @description
+ * @description r-life
  *
  * @version 2018/08/01 初始版本。
  *
  * @author ace
  *
- * @see <a href="http://requirejs.org/">RequireJS</a>
+ * @see {@link http://requirejs.org/|RequireJS}
  *
- * @see <a href="https://jquery.com/">jQuery</a>
+ * @see {@link https://jquery.com/|jQuery}
  *
- * @see <a href="http://underscorejs.org/">Underscore.js</a>
- * @see <a href="https://github.com/jashkenas/underscore">jashkenas/underscore: JavaScript's utility _ belt</a>
- * @see <a href="http://backbonejs.org/">Backbone.js</a>
- * @see <a href="https://github.com/jashkenas/backbone">jashkenas/backbone: Give your JS App some Backbone with Models, Views, Collections, and Events</a>
- * @see <a href="https://github.com/jashkenas/backbone/wiki/Tutorials%2C-blog-posts-and-example-sites">Tutorials, blog posts and example sites · jashkenas/backbone Wiki</a>
+ * @see {@link https://getbootstrap.com/|Bootstrap · The most popular HTML, CSS, and JS library in the world.}
  *
- * @see <a href="https://getbootstrap.com/">Bootstrap · The most popular HTML, CSS, and JS library in the world.</a>
+ * @see {@link http://underscorejs.org/|Underscore.js}
+ * @see {@link https://github.com/jashkenas/underscore|jashkenas/underscore: JavaScript's utility _ belt}
  *
- * @comment
- *
- * @todo
+ * @see {@link http://backbonejs.org/|Backbone.js}
+ * @see {@link https://github.com/jashkenas/backbone|jashkenas/backbone: Give your JS App some Backbone with Models, Views, Collections, and Events}
+ * @see {@link https://github.com/jashkenas/backbone/wiki/Tutorials%2C-blog-posts-and-example-sites|Tutorials, blog posts and example sites · jashkenas/backbone Wiki}
  *
  */
 
@@ -140,7 +135,6 @@ Configurations.loadJS(Configurations.requirejsFile, function() {
 							+ '    </div>'
 							+ '  </div>'
 							+ '</nav>';
-
 			jQuery('body').append(tag);
 
 			jQuery('body').append('<div class="container-fluid" id="' + divLifeAreaId + '" style="padding-top: 50px; height: 100%;"></div>');
